@@ -1,6 +1,7 @@
 ﻿global using BlazorEcommerceWebsite.Shared;
 global using Microsoft.EntityFrameworkCore;
 global using BlazorEcommerceWebsite.Server.Data;
+global using BlazorEcommerceWebsite.Server.Services.ProductService;
 using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<IProductService, ProductService>();
+
 var app = builder.Build();
 
 app.UseSwaggerUI();
@@ -29,7 +32,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

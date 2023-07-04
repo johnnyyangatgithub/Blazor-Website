@@ -10,26 +10,22 @@ namespace BlazorEcommerceWebsite.Server.Controllers
     [Route("api/[controller]")]
     public class ProductController : Controller
     {
-        private readonly DataContext _context;
+        private readonly IProductService _productService;
 
         /// <summary>
         /// Get data from database by using DI
         /// </summary>
         /// <param name="context">The context returned from database.</param>
-        public ProductController(DataContext context)
+        public ProductController(IProductService productService)
         {
-            _context = context;
+            _productService = productService;
         }
 
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProduct()
         {
-            var products = await _context.Products.ToListAsync();
-            var response = new ServiceResponse<List<Product>>()
-            {
-                Data = products
-            };
-            return Ok(response);
+            var result = await _productService.GetProductsAsybc();
+            return Ok(result);
         }
 
         // GET api/values/5
