@@ -21,4 +21,12 @@
     <ProjectReference Include="..\Shared\BlazorEcommerceWebsite.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Services\" />
+    <None Remove="Services\ProductService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
+    <Folder Include="Services\ProductService\" />
+  </ItemGroup>
 </Project>
