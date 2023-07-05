@@ -22,17 +22,17 @@ namespace BlazorEcommerceWebsite.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProduct()
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProducts()
         {
-            var result = await _productService.GetProductsAsybc();
+            var result = await _productService.GetProductsAsync();
             return Ok(result);
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{productId}")]
+        public async Task<ActionResult<ServiceResponse<Product>>> GetProduct(int productId)
         {
-            return "value";
+            var result = await _productService.GetProductAsync(productId);
+            return Ok(result);
         }
 
         // POST api/values
