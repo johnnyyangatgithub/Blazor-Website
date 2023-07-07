@@ -2,11 +2,11 @@
 @implements IDisposable
 
 @if (ProductService.Products == null || ProductService.Products.Count == 0)
-    {
+{
     <span>@ProductService.Message</span>
-    }
-    else
-    {
+}
+else
+{
     <ul class="list-unstyled">
         @foreach (var product in ProductService.Products)
         {
@@ -28,7 +28,7 @@
             </li>
             }
     </ul>
-    }
+}
 
 
 @code {
