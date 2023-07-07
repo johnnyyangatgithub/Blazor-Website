@@ -5,7 +5,11 @@
 
 <PageTitle>Index</PageTitle>
 
-@if (CategoryUrl == null)
+@if (SearchText == null && CategoryUrl == null)
+{
+    <FeaturedProducts />
+}
+else
 {
     <ProductList />
 }
