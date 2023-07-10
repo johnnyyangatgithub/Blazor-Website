@@ -6,6 +6,7 @@ namespace BlazorEcommerceWebsite.Client.Services.CartService
         event Action OnChange;
         Task AddToCart ( CartItem cartItem );
         Task<List<CartItem>> GetCartItems();
+        Task<List<CartProductResponseDTO>> GetCartProducts();
     }
 }
 
