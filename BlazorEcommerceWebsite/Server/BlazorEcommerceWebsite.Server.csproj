@@ -31,11 +31,13 @@
     <None Remove="Services\" />
     <None Remove="Services\ProductService\" />
     <None Remove="Services\CategoryService\" />
+    <None Remove="Services\CartService\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Services\" />
     <Folder Include="Services\ProductService\" />
     <Folder Include="Services\CategoryService\" />
+    <Folder Include="Services\CartService\" />
   </ItemGroup>
 </Project>
