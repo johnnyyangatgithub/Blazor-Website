@@ -46,6 +46,24 @@ namespace BlazorEcommerceWebsite.Client.Services.CartService
             var cartProducts = await response.Content.ReadFromJsonAsync<ServiceResponse<List<CartProductResponseDTO>>>();
             return cartProducts.Data;
         }
+
+        public async Task RemoveProductFromCart(int productId, int productTypeId)
+        {
+            var cart = await _localStorage.GetItemAsync<List<CartItem>>( "cart" );
+            if(cart == null)
+            {
+                return;
+            }
+
+            var cartItem = cart.Find( x => x.ProductId == productId
+                && x.ProductTypeId == productTypeId );
+            if ( cartItem != null )
+            {
+                cart.Remove( cartItem );
+                await _localStorage.SetItemAsync( "cart", cart );
+                OnChange.Invoke();
+            }
+        }
     }
 }
 
