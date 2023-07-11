@@ -32,7 +32,7 @@ namespace BlazorEcommerceWebsite.Server.Services.AuthService
             // Save the change to the database.
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<int> { Data = user.Id };
+            return new ServiceResponse<int> { Data = user.Id, Message = "Registration successful!" };
         }
 
         public async Task<bool> UserExists(string email)
