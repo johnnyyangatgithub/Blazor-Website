@@ -24,7 +24,8 @@ namespace BlazorEcommerceWebsite.Server.Controllers
                 new User
                 {
                     Email = request.Email
-                }, request.Password );
+                },
+                request.Password );
 
             if(!response.Success)
             {

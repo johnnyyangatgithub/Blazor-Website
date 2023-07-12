@@ -40,9 +40,9 @@ namespace BlazorEcommerceWebsite.Server.Services.AuthService
             return response;
         }
 
-        public async Task<ServiceResponse<int>> Register(User user, string password)
+        public async Task<ServiceResponse<int>> Register ( User user, string password )
         {
-            if(await UserExists(user.Email))
+            if ( await UserExists( user.Email ) )
             {
                 return new ServiceResponse<int>
                 {
@@ -52,20 +52,20 @@ namespace BlazorEcommerceWebsite.Server.Services.AuthService
             }
 
             CreatePasswordHash( password, out byte[] passwordHash, out byte[] passwordSalt );
+
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
             _context.Users.Add( user );
-            // Save the change to the database.
             await _context.SaveChangesAsync();
 
             return new ServiceResponse<int> { Data = user.Id, Message = "Registration successful!" };
         }
 
-        public async Task<bool> UserExists(string email)
+        public async Task<bool> UserExists ( string email )
         {
-            if(await _context.Users.AnyAsync(user => user.Email.ToLower()
-                .Equals(email.ToLower())))
+            if ( await _context.Users.AnyAsync( user => user.Email.ToLower()
+                 .Equals( email.ToLower() ) ) )
             {
                 return true;
             }
