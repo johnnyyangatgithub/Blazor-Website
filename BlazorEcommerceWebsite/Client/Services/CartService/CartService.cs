@@ -19,9 +19,15 @@ namespace BlazorEcommerceWebsite.Client.Services.CartService
 
         public event Action OnChange;
 
+        private async Task<bool> IsUserAuthenticated()
+        {
+            return (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
+        }
+        
+
         public async Task AddToCart(CartItem cartItem)
         {
-            if((await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated)
+            if(await IsUserAuthenticated())
             {
                 Console.WriteLine( "User is authenticated" );
             }
