@@ -31,7 +31,7 @@ namespace BlazorEcommerceWebsite.Client
                     identity = new ClaimsIdentity( ParseClaimsFromJwt( authToken ), "jwt" );
                     // Set the default authorization header to the bearer string.
                     _http.DefaultRequestHeaders.Authorization =
-                        new AuthenticationHeaderValue( "Bwarer", authToken.Replace("\"", "" ));
+                        new AuthenticationHeaderValue( "Bearer", authToken.Replace("\"", "" ));
                 }
                 catch
                 {
