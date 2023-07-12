@@ -42,6 +42,8 @@ builder.Services.AddAuthentication( JwtBearerDefaults.AuthenticationScheme )
             ValidateAudience = false
         };
     } );
+// To inject the service
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
