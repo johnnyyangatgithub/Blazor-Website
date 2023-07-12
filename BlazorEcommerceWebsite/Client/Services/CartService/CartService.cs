@@ -1,4 +1,5 @@
 ﻿using System;
+using BlazorEcommerceWebsite.Client.Pages;
 using BlazorEcommerceWebsite.Shared;
 using Blazored.LocalStorage;
 
@@ -6,18 +7,29 @@ namespace BlazorEcommerceWebsite.Client.Services.CartService
 {
     public class CartService : ICartService 
     {
+        private readonly AuthenticationStateProvider _authStateProvider;
         private readonly ILocalStorageService _localStorage;
         private readonly HttpClient _http;
-        public CartService(ILocalStorageService localStorage, HttpClient http)
+        public CartService(ILocalStorageService localStorage, HttpClient http, AuthenticationStateProvider authStateProvider)
         {
             _localStorage = localStorage;
             _http = http;
+            _authStateProvider = authStateProvider;
         }
 
         public event Action OnChange;
 
         public async Task AddToCart(CartItem cartItem)
         {
+            if((await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated)
+            {
+                Console.WriteLine( "User is authenticated" );
+            }
+            else
+            {
+                Console.WriteLine( "User is not authenticated" );
+            }
+
             var cart = await _localStorage.GetItemAsync<List<CartItem>>( "cart" );
             if(cart == null)
             {
@@ -72,6 +84,22 @@ namespace BlazorEcommerceWebsite.Client.Services.CartService
                 cart.Remove( cartItem );
                 await _localStorage.SetItemAsync( "cart", cart );
                 OnChange.Invoke();
+            }
+        }
+
+        public async Task StoreCartItems(bool emptyLocalCart = false)
+        {
+            var localCart = await _localStorage.GetItemAsync<List<CartItem>>( "cart" );
+            if ( localCart == null )
+            {
+                return;
+            }
+
+            await _http.PostAsJsonAsync( "api/cart", localCart );
+
+            if(emptyLocalCart)
+            {
+                await _localStorage.RemoveItemAsync( "cart" );
             }
         }
 
