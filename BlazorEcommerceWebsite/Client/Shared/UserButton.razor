@@ -1,6 +1,6 @@
 ﻿@inject ILocalStorageService LocalStorage
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject NavigationManager NavigationManager 
+@inject NavigationManager NavigationManager
 
 <div class="dropdown">
     <button @onclick="ToggleUserMenu"
@@ -11,7 +11,9 @@
     <div class="dropdown-menu drop-menu-right @UserMenuCssClass">
         <AuthorizeView>
             <Authorized>
-                <a href="logout" class="dropdown-item">Logout</a>
+                <a href="profile" class="dropdown-item">Profile</a>
+                <hr />
+                <button class="dropdown-item" @onclick="Logout">Logout</button>
             </Authorized>
             <NotAuthorized>
                 <a href="login?returnUrl=@NavigationManager.ToBaseRelativePath(NavigationManager.Uri)" class="dropdown-item">Login</a>
@@ -24,7 +26,7 @@
 @code {
     private bool showUserMenu = false;
 
-    private string UserMenuCssClass => showUserMenu ? "show-menu" : string.Empty;
+    private string UserMenuCssClass => showUserMenu ? "show-menu" : null;
 
     private void ToggleUserMenu()
     {
@@ -33,8 +35,8 @@
 
     private async Task HideUserMenu()
     {
-        // Cancel the link nevigation
         await Task.Delay(200);
+        showUserMenu = false;
     }
 
     private async Task Logout()
