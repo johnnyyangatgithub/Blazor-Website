@@ -103,6 +103,29 @@ namespace BlazorEcommerceWebsite.Server.Services.CartService
             await _context.SaveChangesAsync();
             return new ServiceResponse<bool> { Data = true };
         }
+
+        public async Task<ServiceResponse<bool>> UpdateQuantity(CartItem cartItem)
+        {
+            var dbCartItem = await _context.CartItems
+                .FirstOrDefaultAsync( ci => ci.ProductId == cartItem.ProductId &&
+                ci.ProductTypeId == cartItem.ProductTypeId &&
+                ci.UserId == GetUserId() );
+
+            if(dbCartItem == null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Data = false,
+                    Success = false,
+                    Message = "Cart item does not exist."
+                };
+            }
+
+            dbCartItem.Quantity = cartItem.Quantity;
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<bool> { Data = true };
+        }
     }
 }
 
