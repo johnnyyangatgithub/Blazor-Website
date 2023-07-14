@@ -18,7 +18,7 @@ namespace BlazorEcommerceWebsite.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<bool>>> PlaceOrder()
         {
-            var result = _orderService.PlaceOrder();
+            var result = await _orderService.PlaceOrder();
             return Ok( result );
         }
     }
