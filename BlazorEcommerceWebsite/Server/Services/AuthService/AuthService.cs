@@ -12,37 +12,43 @@ namespace BlazorEcommerceWebsite.Server.Services.AuthService
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
-        public AuthService (DataContext context, IConfiguration configuration)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public AuthService( DataContext context,
+            IConfiguration configuration,
+            IHttpContextAccessor httpContextAccessor )
         {
             _context = context;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ServiceResponse<string>> Login(string email, string password)
+        public int GetUserId() => int.Parse( _httpContextAccessor.HttpContext.User.FindFirstValue( ClaimTypes.NameIdentifier ) );
+
+        public async Task<ServiceResponse<string>> Login( string email, string password )
         {
             var response = new ServiceResponse<string>();
             var user = await _context.Users.FirstOrDefaultAsync( x => x.Email.ToLower().Equals( email.ToLower() ) );
-            if(user == null)
+            if( user == null )
             {
                 response.Success = false;
                 response.Message = "User not found.";
             }
-            else if(!VarifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            else if( !VarifyPasswordHash( password, user.PasswordHash, user.PasswordSalt ) )
             {
                 response.Success = false;
                 response.Message = "Wrong password";
             }
             else
             {
-                response.Data = CreateToken(user);
+                response.Data = CreateToken( user );
             }
 
             return response;
         }
 
-        public async Task<ServiceResponse<int>> Register ( User user, string password )
+        public async Task<ServiceResponse<int>> Register( User user, string password )
         {
-            if ( await UserExists( user.Email ) )
+            if( await UserExists( user.Email ) )
             {
                 return new ServiceResponse<int>
                 {
@@ -62,9 +68,9 @@ namespace BlazorEcommerceWebsite.Server.Services.AuthService
             return new ServiceResponse<int> { Data = user.Id, Message = "Registration successful!" };
         }
 
-        public async Task<bool> UserExists ( string email )
+        public async Task<bool> UserExists( string email )
         {
-            if ( await _context.Users.AnyAsync( user => user.Email.ToLower()
+            if( await _context.Users.AnyAsync( user => user.Email.ToLower()
                  .Equals( email.ToLower() ) ) )
             {
                 return true;
@@ -72,9 +78,9 @@ namespace BlazorEcommerceWebsite.Server.Services.AuthService
             return false;
         }
 
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        private void CreatePasswordHash( string password, out byte[] passwordHash, out byte[] passwordSalt )
         {
-            using(var hmac = new HMACSHA512())
+            using( var hmac = new HMACSHA512() )
             {
                 // Create a generated key and will be used for the salt.
                 passwordSalt = hmac.Key;
@@ -83,16 +89,16 @@ namespace BlazorEcommerceWebsite.Server.Services.AuthService
             }
         }
 
-        private bool VarifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        private bool VarifyPasswordHash( string password, byte[] passwordHash, byte[] passwordSalt )
         {
-            using(var hmac = new HMACSHA512(passwordSalt))
+            using( var hmac = new HMACSHA512( passwordSalt ) )
             {
                 var computedHash = hmac.ComputeHash( System.Text.Encoding.UTF8.GetBytes( password ) );
                 return computedHash.SequenceEqual( passwordHash );
             }
         }
 
-        private string CreateToken(User user)
+        private string CreateToken( User user )
         {
             List<Claim> claims = new List<Claim>
             {
@@ -100,8 +106,8 @@ namespace BlazorEcommerceWebsite.Server.Services.AuthService
                 new Claim(ClaimTypes.Name, user.Email)
             };
 
-            var key = new SymmetricSecurityKey( System.Text.Encoding.UTF8.GetBytes( _configuration.GetSection( "AppSettings:Token" ).Value ));
-            var creds = new SigningCredentials( key, SecurityAlgorithms.HmacSha512Signature);
+            var key = new SymmetricSecurityKey( System.Text.Encoding.UTF8.GetBytes( _configuration.GetSection( "AppSettings:Token" ).Value ) );
+            var creds = new SigningCredentials( key, SecurityAlgorithms.HmacSha512Signature );
 
             var token = new JwtSecurityToken(
                 claims: claims,
@@ -114,10 +120,10 @@ namespace BlazorEcommerceWebsite.Server.Services.AuthService
 
         }
 
-        public async Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
+        public async Task<ServiceResponse<bool>> ChangePassword( int userId, string newPassword )
         {
             var user = await _context.Users.FindAsync( userId );
-            if(user == null)
+            if( user == null )
             {
                 return new ServiceResponse<bool>
                 {
