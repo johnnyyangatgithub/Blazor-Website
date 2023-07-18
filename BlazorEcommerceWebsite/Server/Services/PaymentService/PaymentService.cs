@@ -9,6 +9,9 @@ namespace BlazorEcommerceWebsite.Server.Services.PaymentService
         private readonly ICartService _cartService;
         private readonly IAuthService _authService;
         private readonly IOrderService _orderService;
+
+        const string secret = "whsec_cdc67a67ae8377362e66efcbc067b7082788bab65513ea4fe59502f5538a39d8";
+
         public PaymentService( ICartService cartService , IAuthService authService , IOrderService orderService )
         {
             StripeConfiguration.ApiKey = "sk_test_51NUl8BL1jOYXaygsFCUfZUMKGFQFV6WRzEJEdoEcg3ddOD824lfR2ELTVCBl9LwKy9apLsQDuX5wK4znVJFTgwSp00aCZT3flu";
@@ -53,6 +56,32 @@ namespace BlazorEcommerceWebsite.Server.Services.PaymentService
             var service = new SessionService();
             Session session = service.Create( options );
             return session;
+        }
+
+        public async Task<ServiceResponse<bool>> FulfillOrder(HttpRequest request)
+        {
+            var json = await new StreamReader( request.Body ).ReadToEndAsync();
+            try
+            {
+                var stripeEvent = EventUtility.ConstructEvent(
+                    json,
+                    request.Headers["Stripe-Signature"],
+                    secret
+                    );
+
+                if(stripeEvent.Type == Events.CheckoutSessionCompleted)
+                {
+                    var session = stripeEvent.Data.Object as Session;
+                    var user = await _authService.GetUserByEmail( session.CustomerEmail );
+                    await _orderService.PlaceOrder( user.Id );
+                }
+
+                return new ServiceResponse<bool> { Data = true };
+            }
+            catch( Exception ex )
+            {
+                return new ServiceResponse<bool> { Data = false, Success = false, Message = ex.Message };
+            }
         }
     }
 }

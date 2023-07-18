@@ -141,6 +141,11 @@ namespace BlazorEcommerceWebsite.Server.Services.AuthService
 
             return new ServiceResponse<bool> { Data = true, Message = "Password has been reset." };
         }
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync( u => u.Email.Equals( email ) );
+        }
     }
 }
 
