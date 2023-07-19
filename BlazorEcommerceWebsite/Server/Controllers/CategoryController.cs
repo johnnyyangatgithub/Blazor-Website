@@ -52,7 +52,7 @@ namespace BlazorEcommerceWebsite.Server.Controllers
         /// </summary>
         /// <param name="id">The id of category that needs to be deleted.</param>
         /// <returns>The ObjectResult with status code.</returns>
-        [HttpDelete( "admin" ), Authorize( Roles = "Admin" )]
+        [HttpDelete( "admin/{id}" ), Authorize( Roles = "Admin" )]
         public async Task<ActionResult<ServiceResponse<List<Category>>>> DeleteCategory(int id)
         {
             var result = await _categoryService.DeleteCategory( id );
