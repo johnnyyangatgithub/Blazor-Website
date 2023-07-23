@@ -38,6 +38,7 @@
     <None Remove="Services\OrderService\" />
     <None Remove="Services\PaymentService\" />
     <None Remove="Services\AddressService\" />
+    <None Remove="Services\ProductTypeService\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
@@ -49,5 +50,6 @@
     <Folder Include="Services\OrderService\" />
     <Folder Include="Services\PaymentService\" />
     <Folder Include="Services\AddressService\" />
+    <Folder Include="Services\ProductTypeService\" />
   </ItemGroup>
 </Project>
