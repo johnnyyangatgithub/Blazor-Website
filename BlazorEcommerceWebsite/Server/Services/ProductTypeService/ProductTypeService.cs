@@ -1,4 +1,5 @@
 ﻿using System;
+using BlazorEcommerceWebsite.Shared;
 
 namespace BlazorEcommerceWebsite.Server.Services.ProductTypeService
 {
@@ -12,6 +13,7 @@ namespace BlazorEcommerceWebsite.Server.Services.ProductTypeService
 
         public async Task<ServiceResponse<List<ProductType>>> AddProductType(ProductType productType)
         {
+            productType.Editing = productType.IsNew = false;
             _context.ProductTypes.Add( productType );
             await _context.SaveChangesAsync();
             return await GetProductTypes();
@@ -38,7 +40,7 @@ namespace BlazorEcommerceWebsite.Server.Services.ProductTypeService
             dbProductType.Name = productType.Name;
             await _context.SaveChangesAsync();
 
-            return await GetProductTypes();
+            return await GetProductTypes(); 
         }
     }
 }
