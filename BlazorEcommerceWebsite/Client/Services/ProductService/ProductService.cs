@@ -28,9 +28,9 @@ namespace BlazorEcommerceWebsite.Client.Services.ProductService
             return newProduct;
         }
 
-        public async Task DeleteProduct(int productId)
+        public async Task DeleteProduct(Product product)
         {
-            var result = await _http.DeleteAsync( $"api/product/{productId}" );
+            var result = await _http.DeleteAsync( $"api/product/{product.ID}" );
         }
 
         public async Task GetAdminProducts()
