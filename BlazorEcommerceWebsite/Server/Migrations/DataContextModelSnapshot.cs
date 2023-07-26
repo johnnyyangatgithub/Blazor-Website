@@ -160,7 +160,7 @@ namespace BlazorEcommerceWebsite.Server.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("Image");
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("BlazorEcommerceWebsite.Shared.Order", b =>
