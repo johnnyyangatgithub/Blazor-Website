@@ -51,6 +51,7 @@ namespace BlazorEcommerceWebsite.Server.Services.ProductService
                 .Where( p => !p.Deleted )
                 .Include( p => p.Variants.Where( v => !v.Deleted ) )
                 .ThenInclude( v => v.ProductType )
+                .Include( p => p.Images )
                 .ToListAsync()
             };
 
@@ -64,6 +65,7 @@ namespace BlazorEcommerceWebsite.Server.Services.ProductService
                 Data = await _context.Products
                     .Where( p => p.Featured && p.Visbile && !p.Deleted )
                     .Include( p => p.Variants.Where( v => v.Visbile && !v.Deleted ) )
+                    .Include( p => p.Images )
                     .ToListAsync()
             };
 
@@ -79,13 +81,15 @@ namespace BlazorEcommerceWebsite.Server.Services.ProductService
                 product = await _context.Products
                     .Include( p => p.Variants.Where( v => !v.Deleted ) )
                     .ThenInclude( v => v.ProductType )
-                    .FirstOrDefaultAsync( p => p.ID == productId && !p.Deleted);
+                    .Include( p => p.Images )
+                    .FirstOrDefaultAsync( p => p.ID == productId && !p.Deleted );
             }
             else
             {
                 product = await _context.Products
                    .Include( p => p.Variants.Where( v => v.Visbile && !v.Deleted ) )
                    .ThenInclude( v => v.ProductType )
+                   .Include( p => p.Images )
                    .FirstOrDefaultAsync( p => p.ID == productId && !p.Deleted && p.Visbile );
             }
 
@@ -108,6 +112,7 @@ namespace BlazorEcommerceWebsite.Server.Services.ProductService
                 Data = await _context.Products
                 .Where( p => p.Visbile && !p.Deleted)
                 .Include( p => p.Variants.Where(v => v.Visbile && !v.Deleted) )
+                .Include( p => p.Images )
                 .ToListAsync()
             };
 
@@ -122,6 +127,7 @@ namespace BlazorEcommerceWebsite.Server.Services.ProductService
                     .Where( p => p.Category.Url.ToLower().Equals( categoryUrl.ToLower() ) &&
                         p.Visbile && !p.Deleted)
                     .Include( p => p.Variants )
+                    .Include( p => p.Images )
                     .ToListAsync()
             };
 
@@ -171,6 +177,7 @@ namespace BlazorEcommerceWebsite.Server.Services.ProductService
                                     p.Description.ToLower().Contains( searchText.ToLower() ) &&
                                     p.Visbile && !p.Deleted )
                                 .Include( p => p.Variants )
+                                .Include( p => p.Images )
                                 .Skip( (page - 1) * (int)pageResults )
                                 .Take( (int)pageResults )
                                 .ToListAsync();
