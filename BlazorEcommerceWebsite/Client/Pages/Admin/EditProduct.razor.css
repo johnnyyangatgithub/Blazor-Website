@@ -24,3 +24,9 @@
 .col-visible {
     text-align: center;
 }
+
+.img-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

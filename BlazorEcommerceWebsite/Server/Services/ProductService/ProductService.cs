@@ -196,7 +196,9 @@ namespace BlazorEcommerceWebsite.Server.Services.ProductService
 
         public async Task<ServiceResponse<Product>> UpdateProduct(Product product)
         {
-            var dbProduct = await _context.Products.FindAsync( product.ID );
+            var dbProduct = await _context.Products
+                                    .Include( p=> p.Images)
+                                    .FirstOrDefaultAsync( p => p.ID == product.ID );
             if( dbProduct == null )
             {
                 return new ServiceResponse<Product>
@@ -212,6 +214,13 @@ namespace BlazorEcommerceWebsite.Server.Services.ProductService
             dbProduct.CategoryId = product.CategoryId;
             dbProduct.Visbile = product.Visbile;
             dbProduct.Featured = product.Featured;
+
+            // To remove images here but this solution is not universal, meaning this really depended on different cases.
+            // This is specific operates the images of the product.
+            var productImages = dbProduct.Images;
+            _context.Images.RemoveRange( productImages );
+
+            dbProduct.Images = product.Images;
 
             foreach( var variant in product.Variants)
             {
