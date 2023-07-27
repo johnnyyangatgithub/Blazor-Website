@@ -40,10 +40,19 @@ else
         {
             foreach (var image in product.Images)
             {
-                <div class="img-container">
-                    <img src="@image.Data" />
-                    <button type="button" class="btn btn-primary" @onclick="() => RemoveImage(image.Id)">Remove</button>
-                </div>
+                <MudCard Class="ma-2">
+                    <MudCardContent>
+                        <MudImage Src="@image.Data" />
+                    </MudCardContent>
+                    <MudCardActions Style="justify-content: center;">
+                        <MudButton
+                            Variant="Variant.Filled"
+                            Color="Color.Error"
+                            OnClick="@(() => RemoveImage(image.Id))">
+                            Remove
+                        </MudButton>
+                    </MudCardActions>
+                </MudCard>
             }
         }
     </div>
